@@ -12,7 +12,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -22,10 +22,11 @@
 	$active_productos="active";
 	$active_fabricantes="";
 	$active_usuarios="";
-	$active_empresa="";	
-	$active_clientes="";	
-	$active_contactos="";	
+	$active_empresa="";
+	$active_clientes="";
+	$active_contactos="";
 	$active_monedas="";
+	$active_reportes="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,30 +51,30 @@
 </head>
 
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
 	include("modal/registro_productos.php");
 	include("modal/editar_productos.php");
 	include("modal/importar_productos.php");
 	?>
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-barcode'></i></a></li>
 				<li class="active">Productos</li>
 			</ol>
-			
+
 		</div><!--/.row-->
-		
+
 		<div class="row">
-			
+
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-											
+
 						<div class="btn-group pull-right">
-						
+
 						<div class="btn-group">
 							<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
 							<i class="fa fa-file"></i> Importar datos <span class="caret"></span></button>
@@ -100,7 +101,7 @@
 									<div class="input-group">
 										<select class="form-control" id="q3" onchange="load(1);">
 											<option value="">Selecciona fabricante</option>
-											<?php 
+											<?php
 												$query=mysqli_query($con,"select * from manufacturers order by nombre_marca");
 												while($rw=mysqli_fetch_array($query)){
 													?>
@@ -110,16 +111,16 @@
 											?>
 										</select>
 										<span class="btn btn-default input-group-addon" onclick="load(1);"><i class="fa fa-search"></i></span>
-									</div>	
+									</div>
 								</div>
 								<div class="col-md-1">
 									<span id="loader"></span>
 								</div>
 							</div>
-								
+
 						</form>
-						
-						
+
+
 						<div id="resultados"></div><!-- Carga los datos ajax -->
 						<div class='outer_div'></div><!-- Carga los datos ajax -->
 					</div>
@@ -136,7 +137,7 @@
 <script>
 $( "#guardar_producto" ).submit(function( event ) {
   $('#guardar_datos').attr("disabled", true);
-  
+
  var parametros = $(this).serialize();
 	 $.ajax({
 			type: "POST",
@@ -158,7 +159,7 @@ $( "#guardar_producto" ).submit(function( event ) {
 
 $( "#editar_producto" ).submit(function( event ) {
   $('#actualizar_datos').attr("disabled", true);
-  
+
  var parametros = $(this).serialize();
 	 $.ajax({
 			type: "POST",
@@ -186,7 +187,7 @@ $( "#editar_producto" ).submit(function( event ) {
 			var estado = $("#estado"+id).val();
 			var precio_producto = $("#precio_producto"+id).val();
 			var descripcion = $("#descripcion"+id).html();
-			
+
 			$("#mod_id").val(id);
 			$("#mod_codigo").val(codigo_producto);
 			$("#mod_modelo").val(modelo_producto);
@@ -196,18 +197,18 @@ $( "#editar_producto" ).submit(function( event ) {
 			$("select#mod_estado option")
 			.each(function() { this.selected = (this.text == estado); });
 			$("#mod_precio").val(precio_producto);
-			
+
 			$('#mod_nombre').summernote({
 			  toolbar: [
 				// [groupName, [list of button]]
 				['style', ['bold', 'italic', 'underline']],
-				
+
 				['fontsize', ['fontsize']],
 				['color', ['color']],
 				['para', ['ul', 'ol', 'paragraph']],
 				['link',['linkDialogShow', 'unlink']],
-				
-				
+
+
 			  ],height: 100,
 			});
 			$('#mod_nombre').summernote('code', descripcion);
@@ -220,13 +221,13 @@ $('#nombre').summernote({
   toolbar: [
     // [groupName, [list of button]]
     ['style', ['bold', 'italic', 'underline']],
-    
+
     ['fontsize', ['fontsize']],
     ['color', ['color']],
     ['para', ['ul', 'ol', 'paragraph']],
 	['link',['linkDialogShow', 'unlink']],
-	
-    
+
+
   ],height: 100,
 });
 
@@ -249,7 +250,7 @@ $("#importar_datos" ).submit(function(event) {
 			  },
 			success: function(datos){
 			$("#resultados").html(datos);
-			
+
 			window.setTimeout(function() {
 			$(".alert").fadeTo(500, 0).slideUp(500, function(){
 			$(this).remove();});}, 5000);
@@ -257,10 +258,10 @@ $("#importar_datos" ).submit(function(event) {
 			$(".importar_datos").html("Importar datos");
 			$('.importar_datos').attr("disabled", false);
 			load(1);
-		  } 
-	});		
+		  }
+	});
 		event.preventDefault();
-	
-  
+
+
 });
     </script>

@@ -12,7 +12,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -24,16 +24,17 @@
 	$active_fabricantes="";
 	$active_usuarios="";
 	$active_clientes="";
-	$active_empresa="";	
-	$active_contactos="";	
+	$active_empresa="";
+	$active_contactos="";
 	$active_monedas="";
-	
-	$numero_cotizacion=intval($_GET['id']);	
+	$active_reportes="";
+
+	$numero_cotizacion=intval($_GET['id']);
 	$_SESSION['numero_cotizacion']=$numero_cotizacion;
 	$sql_estimates=mysqli_query($con,"SELECT * FROM estimates, clients WHERE estimates.id_cliente=clients.id and estimates.numero_cotizacion='$numero_cotizacion'");
 	$num_row=mysqli_num_rows($sql_estimates);
 	$row=mysqli_fetch_array($sql_estimates);
-	
+
 	$cliente=$row['nombre_cliente'];
 	$contacto=$row['contacto'];
 	$movil=$row['movil'];
@@ -51,12 +52,12 @@
 	$id_contact=$row['id_contact'];
 	$email_contact="";
 	$telefono_contact="";
-	
+
 	if (!isset($_GET['id']) or $num_row==0){
 		header("location: cotizaciones.php");
 		exit;
 	}
-	
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,42 +81,42 @@
 </head>
 
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
 	include("modal/buscar_productos.php");
 	include("modal/editar_item.php");
 	?>
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-shopping-cart'></i> </a></li>
 				<li class="active">Cotizaciones</li>
 			</ol>
-			
+
 		</div><!--/.row-->
-		
+
 		<div class="row">
-			
+
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4><i class='glyphicon glyphicon-edit'></i> Editar Cotización</h4>
 					</div>
 					<div class="panel-body">
-					
+
 						<form class="form-horizontal" role="form" id="datos_cotizacion">
 							<div class="form-group row">
 							  <label for="nombre_cliente" class="col-md-2 control-label">Selecciona el cliente:</label>
 							  <div class="col-md-3">
 								  <input type="text" class="form-control input-sm" id="nombre_cliente" placeholder="" required value="<?php echo $cliente;?>">
-								  <input id="id_cliente" type='hidden' value="<?php echo $id_cliente;?>">	
+								  <input id="id_cliente" type='hidden' value="<?php echo $id_cliente;?>">
 							 </div>
 							  <label for="atencion" class="col-md-1 control-label">Atención:</label>
 								<div class="col-md-2">
 									<select class='form-control input-sm' id="atencion" name="atencion" onchange="update_cotizacion(8,this.value);">
 										<option value="">Selecciona</option>
-										<?php 
+										<?php
 											$sql=mysqli_query($con,"select * from contacts where id_client='".$id_cliente."'");
 											while($row=mysqli_fetch_array($sql)){
 												?>
@@ -123,7 +124,7 @@
 												<?php
 											}
 										?>
-										
+
 									</select>
 								</div>
 								<div class='row'>
@@ -133,7 +134,7 @@
 								 <div class="col-xs-2">
 									<input type="text" class="form-control input-sm" id="email_contact" placeholder="" value="<?php echo $email_contact;?>" readonly>
 								 </div>
-								
+
 								</div>
 							</div>
 							<div class="form-group row">
@@ -188,12 +189,12 @@
 										<option value='1' <?php if($status==1){echo "selected";}?>>Aceptada</option>
 										<option value='2' <?php if($status==2){echo "selected";}?>>Rechazada</option>
 									</select>
-								</div>	
-								
+								</div>
+
 								<label for="moneda" class="col-md-1 control-label">Moneda:</label>
 								<div class="col-md-3">
 									<select name="moneda" id="moneda" class='form-control input-sm' onchange="update_cotizacion(7,this.value);">
-										<?php 
+										<?php
 											$sql_monedas=mysqli_query($con,"select id, name from currencies order by id");
 											while ($rw=mysqli_fetch_array($sql_monedas)){
 												?>
@@ -202,10 +203,10 @@
 											}
 										?>
 									</select>
-								</div>						
+								</div>
 							</div>
-							
-							
+
+
 							<div class="row">
 								<div class="col-md-12">
 									<div class="pull-right">
@@ -215,10 +216,10 @@
 										<button type="button" class="btn btn-default" onclick="ver_cotizacion('<?php echo $id_cotizacion;?>');">
 										  <span class="glyphicon glyphicon-print"></span> Imprimir
 										</button>
-									</div>	
+									</div>
 								</div>
 							</div>
-						</form>	
+						</form>
 						<div class="row">
 							<div id="resultados"  class="col-md-12" style="margin-top:10px"></div><!-- Carga los datos ajax -->
 						</div>

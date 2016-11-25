@@ -13,7 +13,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -25,8 +25,9 @@
 	$active_fabricantes="";
 	$active_usuarios="";
 	$active_empresa="";
-	$active_contactos="";	
-	$active_monedas="";	
+	$active_contactos="";
+	$active_monedas="";
+	$active_reportes="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,30 +50,30 @@
 </head>
 
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
 	include("modal/enviar_email.php");
 	?>
-		
 
-		
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main" >			
+
+
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main" >
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-shopping-cart'></i> </a></li>
 				<li class="active">Cotizaciones</li>
 			</ol>
-			
+
 		</div><!--/.row-->
-		
+
 		<div class="row">
-			
+
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="btn-group pull-right">
-							<a  href="#" onclick="reporte();" class="btn btn-default"><span class="glyphicon glyphicon-print" ></span> Reporte</a> 
+							<a  href="#" onclick="reporte();" class="btn btn-default"><span class="glyphicon glyphicon-print" ></span> Reporte</a>
 							<a  href="nueva_cotizacion.php" class="btn btn-info"><span class="glyphicon glyphicon-plus" ></span> Nueva Cotización</a>
 						</div>
 						<h4><i class='glyphicon glyphicon-search'></i> Buscar Cotizaciones</h4>
@@ -84,7 +85,7 @@
 								<div class="col-md-3">
 									<input type="text" name="daterange" id="daterange" value="" class="form-control input-sm" readonly />
 								</div>
-								
+
 								<div class="col-md-2">
 									<select class="form-control input-sm" id="id_vendedor" onchange="load(1);">
 										<option value="">Vendedor</option>
@@ -113,28 +114,28 @@
 									<div class="input-group">
 										<input type="text" class="form-control input-sm" id="q" placeholder="Atención ó Empresa" onkeyup='load(1);'>
 										<span class="btn btn-default input-group-addon" onclick="load(1);"><i class="glyphicon glyphicon-search"></i></span>
-									</div>	
-								</div>		
-										
+									</div>
 								</div>
-								
+
+								</div>
+
 								<div  style="position:absolute;"></div>
-									
+
 								<div style="position: absolute; left: 50%;">
 									<div id="loader" style="position: relative; left: -50%;">
-									
+
 									</div>
 								</div>
 						</form>
 						<div id="resultados"></div><!-- Carga los datos ajax -->
 						<div class='outer_div' ></div><!-- Carga los datos ajax -->
 					</div>
-						
+
 					</div>
 				</div>
 			</div>
-			
-    
+
+
 
 		</div><!-- /.row -->
 	<script src="js/jquery-1.11.1.min.js"></script>
@@ -156,9 +157,9 @@
 		startDate: '<?php echo "01/".date("m/Y");?>',//Fecha Inicial por defecto es el primer dia del mes y año  actual
 		endDate: '<?php echo date("d/m/Y");?>'//Fecha Final por defecto es la fecha de hoy
 	}
-	
+
 	);
-	
+
 	$('#daterange').on('apply.daterangepicker', function(ev, picker) {
 	  //do something, enviar los datos via ajax con la funcion load()
 	  load(1);
@@ -179,7 +180,7 @@
 	<script>
 		$( "#enviar_cotizacion" ).submit(function( event ) {
 		  $('#guardar_datos').attr("disabled", true);
-		  
+
 		 var parametros = $(this).serialize();
 			 $.ajax({
 					type: "POST",
@@ -191,12 +192,12 @@
 					success: function(datos){
 					$(".resultados_ajax").html(datos);
 					$('#guardar_datos').attr("disabled", false);
-					
+
 				  }
 			});
 		  event.preventDefault();
 		})
 	</script>
-	
+
 	</body>
 </html>

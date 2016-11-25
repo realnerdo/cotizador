@@ -12,7 +12,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -23,9 +23,10 @@
 	$active_fabricantes="";
 	$active_monedas="";
 	$active_usuarios="";
-	$active_empresa="";	
+	$active_empresa="";
 	$active_clientes="";
 	$active_contactos="";
+	$active_reportes="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,28 +50,28 @@
 </head>
 
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
-	
-	?>
-		
 
-		
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+	?>
+
+
+
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
 				<li class="active">Inicio</li>
 			</ol>
 		</div><!--/.row-->
-		
+
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">Panel de Control</h1>
 			</div>
 		</div><!--/.row-->
-		
+
 		<div class="row">
 			<div class="col-xs-12 col-md-6 col-lg-3">
 				<div class="panel panel-blue panel-widget ">
@@ -103,7 +104,7 @@
 					<div class="row no-padding">
 						<div class="col-sm-3 col-lg-5 widget-left">
 							<i class='fa fa-tags fa-4x'></i>
-							
+
 						</div>
 						<div class="col-sm-9 col-lg-7 widget-right">
 							<div class="large"><?php echo counter('manufacturers');?></div>
@@ -126,9 +127,9 @@
 				</div>
 			</div>
 		</div><!--/.row-->
-		
-		
-		
+
+
+
 		<div class="row">
 			<div class="col-xs-12 col-md-6 col-lg-3">
 				<div class="panel panel-default">
@@ -191,8 +192,8 @@
 				</div>
 			</div>
 		</div><!--/.row-->
-								
-		
+
+
 	</div>	<!--/.main-->
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>

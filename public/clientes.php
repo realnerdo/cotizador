@@ -12,7 +12,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -22,10 +22,11 @@
 	$active_productos="";
 	$active_fabricantes="";
 	$active_usuarios="";
-	$active_empresa="";	
+	$active_empresa="";
 	$active_clientes="active";
-	$active_contactos="";	
+	$active_contactos="";
 	$active_monedas="";
+	$active_reportes="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,7 +46,7 @@
 <![endif]-->
 </head>
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
 	include("modal/registro_clientes.php");
@@ -53,13 +54,13 @@
 	include("modal/editar_contactos.php");
 	include("modal/editar_clientes.php");
 	?>
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-users'></i></a></li>
 				<li class="active">Clientes</li>
 			</ol>
-			
+
 		</div><!--/.row-->
 		<div class="row">
 			<div class="col-md-12">
@@ -77,8 +78,8 @@
 									<div class="col-md-5">
 										<div class="input-group">
 											<input type="text" class="form-control" id="q"  onkeyup='load(1);'>
-											<span class="btn btn-default input-group-addon" onclick="load(1);"><i class="glyphicon glyphicon-search"></i></span>	
-										</div>	
+											<span class="btn btn-default input-group-addon" onclick="load(1);"><i class="glyphicon glyphicon-search"></i></span>
+										</div>
 									</div>
 									<div class="col-md-3">
 										<span id="loader"></span>
@@ -107,12 +108,12 @@
 		  modal.find('.modal-title').text('Agregar contacto a: ' + cliente)
 		  modal.find('.modal-body #guardar_contacto #id_client').val(id)
 		})
-		
+
 		$('#edit').on('show.bs.modal', function (event) {
 		  var button = $(event.relatedTarget) // Button that triggered the modal
 		  var cliente = button.data('cliente') // Extract info from data-* attributes
 		  var nombre_contact = button.data('nombre_contact') // Extract info from data-* attributes
-		  var telefono_contact = button.data('telefono_contact') // Extract info from data-* attributes 
+		  var telefono_contact = button.data('telefono_contact') // Extract info from data-* attributes
 		  var email_contact = button.data('email_contact') // Extract info from data-* attributes
 		  var id_contact = button.data('id_contact') // Extract info from data-* attributes
 		  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).

@@ -12,7 +12,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -23,10 +23,11 @@
 	$active_fabricantes="";
 	$active_usuarios="";
 	$active_clientes="";
-	$active_empresa="";	
-	$active_contactos="";	
+	$active_empresa="";
+	$active_contactos="";
 	$active_monedas="";
-	
+	$active_reportes="";
+
 	$sql_monedas=mysqli_query($con,"select id_moneda from empresa where id_empresa=1");
 	$rw=mysqli_fetch_array($sql_monedas);
 	$id_moneda=$rw['id_moneda'];
@@ -53,46 +54,46 @@
 </head>
 
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
 	include("modal/buscar_productos.php");
 	include("modal/editar_item.php");
 	?>
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-shopping-cart'></i> </a></li>
 				<li class="active">Cotizaciones</li>
 			</ol>
-			
+
 		</div><!--/.row-->
-		
+
 		<div class="row">
-			
+
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4><i class='glyphicon glyphicon-edit'></i> Nueva Cotización</h4>
 					</div>
 					<div class="panel-body">
-					
+
 						<form class="form-horizontal" role="form" id="datos_cotizacion">
 							<div class="form-group row">
 							  <label for="nombre_cliente" class="col-md-2 control-label">Selecciona el cliente:</label>
 							  <div class="col-md-3">
 								  <input type="text" class="form-control input-sm" id="nombre_cliente" placeholder="Ingresa el nombre del cliente" required>
-								  <input id="id_cliente" type='hidden'>	
+								  <input id="id_cliente" type='hidden'>
 							 </div>
-							  
-							  
+
+
 							  <label for="atencion" class="col-md-1 control-label">Atención:</label>
 								<div class="col-md-2">
 									<select class='form-control input-sm' id="atencion" name="atencion" >
 										<option value="">Selecciona</option>
 									</select>
 								</div>
-								
+
 								<div class='row'>
 								<div class="col-md-2">
 									<input type="text" class="form-control input-sm" id="tel1" placeholder="" value="Teléfono" readonly>
@@ -100,7 +101,7 @@
 								 <div class="col-md-2">
 									<input type="text" class="form-control input-sm" id="email_contact" placeholder="" value="Correo electrónico" readonly>
 								 </div>
-								
+
 								</div>
 							</div>
 							<div class="form-group row">
@@ -145,17 +146,17 @@
 									<input type="text" class="form-control input-sm" id="entrega" placeholder="Tiempo de entrega" value="Inmediato">
 								</div>
 							</div>
-							
+
 							<div class="form-group row">
 								<label for="condiciones" class="col-md-2 control-label">Nota:</label>
 								<div class="col-md-6">
 									<input type="text" class="form-control input-sm" id="notas" placeholder="Nota"maxlength='255' >
 								</div>
-								
+
 								<label for="moneda" class="col-md-1 control-label">Moneda:</label>
 								<div class="col-md-3">
 									<select name="moneda" id="moneda" class='form-control input-sm' onchange="update_cotizacion(7,this.value);">
-										<?php 
+										<?php
 											$sql_monedas=mysqli_query($con,"select id, name from currencies order by id");
 											while ($rw=mysqli_fetch_array($sql_monedas)){
 												?>
@@ -165,7 +166,7 @@
 										?>
 									</select>
 								</div>
-								
+
 							</div>
 							<div class="row">
 								<div class="col-md-12">
@@ -176,10 +177,10 @@
 											<button type="submit" class="btn btn-default">
 											  <span class="glyphicon glyphicon-print"></span> Imprimir
 											</button>
-										</div>	
+										</div>
 								</div>
-							</div>	
-						</form>	
+							</div>
+						</form>
 						<div class="row">
 							<div id="resultados" class='col-md-12' style="margin-top:10px"></div><!-- Carga los datos ajax -->
 						</div>

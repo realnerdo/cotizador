@@ -12,7 +12,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -24,10 +24,11 @@
 	$active_fabricantes="";
 	$active_usuarios="";
 	$active_empresa	="active";
-	$active_contactos="";	
+	$active_contactos="";
 	$active_monedas="";
+	$active_reportes="";
 	if (isset($_POST['guardar']))
-		{	
+		{
 			include("./libraries/empresa.php");
 		}
 	/*Datos de la empresa*/
@@ -69,29 +70,29 @@
 </head>
 
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
-	
+
 	?>
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-cog'></i> </a></li>
 				<li class="active">Configuración</li>
 			</ol>
-			
+
 		</div><!--/.row-->
-		
+
 		<div class="row">
-			
+
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h4><i class='glyphicon glyphicon-cog'></i> Configurar datos de la empresa</h4>
 					</div>
 					<div class="panel-body">
-						<?php 
+						<?php
 										if (isset($errors)){
 											?>
 										<div class="alert alert-danger">
@@ -102,11 +103,11 @@
 													echo $error;
 												}
 											?>
-										</div>	
+										</div>
 											<?php
 										}
 									?>
-									<?php 
+									<?php
 										if (isset($messages)){
 											?>
 										<div class="alert alert-success">
@@ -117,10 +118,10 @@
 													echo $message;
 												}
 											?>
-										</div>	
+										</div>
 											<?php
 										}
-									?>	
+									?>
 						<form  role="form" enctype="multipart/form-data" method="post" >
 							<div class="row">
 								<div class="col-xs-12 col-md-6 form-group">
@@ -160,7 +161,7 @@
 								<div class="col-xs-12 col-md-6 form-group">
 									<label>Selecciona moneda</label>
 									<select name="moneda" id="moneda" class='form-control'>
-										<?php 
+										<?php
 											$sql_monedas=mysqli_query($con,"select id, name from currencies order by id");
 											while ($rw=mysqli_fetch_array($sql_monedas)){
 												?>
@@ -188,20 +189,20 @@
 										<a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Eliminar</a>
 									  </div>
 									</div>
-									
+
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-xs-12 col-md-6 form-group">
-									
+
 								</div>
 								<div class="col-xs-12 col-md-6 form-group">
-									
+
 									<button type="submit" class="btn btn-primary" name="guardar">Guardar datos</button>
 								</div>
 							</div>
-						</form>	
-						
+						</form>
+
 					</div>
 				</div>
 			</div>
@@ -211,6 +212,6 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jasny-bootstrap.min.js"></script>
 	<script src="js/jquery.mockjax.min.js"></script>
-	
+
 	</body>
 </html>

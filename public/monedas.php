@@ -12,7 +12,7 @@
 	if (!file_exists ('config/db.php')){
 		header("location: install/paso1.php");
 		exit;
-	}	
+	}
 	/* Connect To Database*/
 	require_once ("config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("config/conexion.php");//Contiene funcion que conecta a la base de datos
@@ -22,10 +22,11 @@
 	$active_productos="";
 	$active_fabricantes="";
 	$active_usuarios="";
-	$active_empresa="";	
-	$active_clientes="";	
-	$active_contactos="";	
+	$active_empresa="";
+	$active_clientes="";
+	$active_contactos="";
 	$active_monedas="active";
+	$active_reportes="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,23 +50,23 @@
 </head>
 
 <body>
-	<?php 
+	<?php
 	include("navbar.php");
 	include("sidebar.php");
 	include("modal/registro_monedas.php");
 	include("modal/editar_monedas.php");
 	?>
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-usd'></i></a></li>
 				<li class="active">Administración de monedas</li>
 			</ol>
-			
+
 		</div><!--/.row-->
-		
+
 		<div class="row">
-			
+
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -82,7 +83,7 @@
 									<div class="input-group">
 										<input type="text" class="form-control" id="q" placeholder="" onkeyup='load(1);'>
 										<span class="btn btn-default input-group-addon" onclick="load(1);"><i class="glyphicon glyphicon-search"></i></span>
-									</div>	
+									</div>
 								</div>
 								<div class="col-md-3">
 									<span id="loader"></span>
@@ -90,7 +91,7 @@
 							</div>
 						</form>
 						<div id="resultados"></div><!-- Carga los datos ajax -->
-						<div class='outer_div'></div><!-- Carga los datos ajax -->	
+						<div class='outer_div'></div><!-- Carga los datos ajax -->
 					</div>
 				</div>
 			</div>
@@ -105,7 +106,7 @@
 <script>
 $( "#guardar_moneda" ).submit(function( event ) {
   $('#guardar_datos').attr("disabled", true);
-  
+
  var parametros = $(this).serialize();
 	 $.ajax({
 			type: "POST",
@@ -126,7 +127,7 @@ $( "#guardar_moneda" ).submit(function( event ) {
 
 $( "#editar_moneda" ).submit(function( event ) {
   $('#actualizar_datos').attr("disabled", true);
-  
+
  var parametros = $(this).serialize();
 	 $.ajax({
 			type: "POST",

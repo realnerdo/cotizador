@@ -11,7 +11,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#">
-					<img style="max-width:150px; margin-top: -4px;"  src="img/cotizador_web.png">
+					<img style="max-width:85px; margin-top: -4px;"  src="img/logo/logo.png">
 				</a>
 				<ul class="user-menu">
 					<li class="dropdown pull-right">
@@ -22,8 +22,8 @@
 					</li>
 				</ul>
 			</div>
-							
+
 		</div><!-- /.container-fluid -->
 	</nav>
-	
+
 	<?php  @is_valid();?>
