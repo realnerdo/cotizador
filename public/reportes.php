@@ -61,35 +61,6 @@
 		<div class="row">
 			<div class="col-md-12">
 
-				<div class="panel panel-default">
-
-					<div class="panel-heading">
-						<div class="btn-group pull-right">
-							<button type='button' class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" ></span> Nuevo Cliente</button>
-						</div>
-						<h4><i class='glyphicon glyphicon-search'></i> Buscar Clientes</h4>
-					</div>
-
-					<div class="panel-body">
-						<form class="form-horizontal" role="form" id="datos_cotizacion">
-								<div class="form-group row">
-									<label for="q" class="col-md-2 control-label">Nombre del cliente:</label>
-									<div class="col-md-5">
-										<div class="input-group">
-											<input type="text" class="form-control" id="q"  onkeyup='load(1);'>
-											<span class="btn btn-default input-group-addon" onclick="load(1);"><i class="glyphicon glyphicon-search"></i></span>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<span id="loader"></span>
-									</div>
-								</div>
-						</form>
-						<div id="resultados"></div><!-- Carga los datos ajax -->
-						<div class='outer_div'></div><!-- Carga los datos ajax -->
-					</div>
-				</div><!-- /.panel-default -->
-
 			</div><!-- /.col-md-12 -->
 
 		</div><!-- /.row -->

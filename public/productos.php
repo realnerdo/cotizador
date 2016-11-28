@@ -135,14 +135,30 @@
 	</body>
 </html>
 <script>
-$( "#guardar_producto" ).submit(function( event ) {
+
+var guardar_producto_form = $( "#guardar_producto" );
+guardar_producto_form.submit(function( event ) {
   $('#guardar_datos').attr("disabled", true);
 
- var parametros = $(this).serialize();
+  var fd = new FormData();
+  var file_data = $('#foto_producto')[0].files;
+
+	for(var i = 0;i<file_data.length;i++){
+		fd.append("foto_"+i, file_data[i]);
+	}
+
+	var other_data = guardar_producto_form.serializeArray();
+
+	$.each(other_data,function(key,input){
+        fd.append(input.name,input.value);
+    });
+
 	 $.ajax({
 			type: "POST",
 			url: "ajax/nuevo_producto.php",
-			data: parametros,
+			data: fd,
+			contentType: false,
+        	processData: false,
 			 beforeSend: function(objeto){
 				$("#resultados").html("Mensaje: Cargando...");
 			  },
@@ -155,16 +171,31 @@ $( "#guardar_producto" ).submit(function( event ) {
 		  }
 	});
   event.preventDefault();
-})
+});
 
-$( "#editar_producto" ).submit(function( event ) {
+var editar_producto_form = $( "#editar_producto" );
+editar_producto_form.submit(function( event ) {
   $('#actualizar_datos').attr("disabled", true);
 
- var parametros = $(this).serialize();
+  var fd = new FormData();
+  var file_data = $('#foto_producto_e')[0].files;
+
+  for(var i = 0;i<file_data.length;i++){
+	  fd.append("foto_"+i, file_data[i]);
+  }
+
+  var other_data = editar_producto_form.serializeArray();
+
+  $.each(other_data,function(key,input){
+		fd.append(input.name,input.value);
+	});
+
 	 $.ajax({
 			type: "POST",
 			url: "ajax/editar_producto.php",
-			data: parametros,
+			data: fd,
+			contentType: false,
+        	processData: false,
 			 beforeSend: function(objeto){
 				$("#resultados").html("Mensaje: Cargando...");
 			  },
@@ -181,7 +212,7 @@ $( "#editar_producto" ).submit(function( event ) {
 
 	function obtener_datos(id){
 			var codigo_producto = $("#codigo_producto"+id).val();
-			var modelo_producto = $("#modelo_producto"+id).val();
+			// var modelo_producto = $("#modelo_producto"+id).val();
 			var nombre_producto = $("#nombre_producto"+id).val();
 			var fabricante = $("#fabricante"+id).val();
 			var estado = $("#estado"+id).val();
@@ -190,7 +221,7 @@ $( "#editar_producto" ).submit(function( event ) {
 
 			$("#mod_id").val(id);
 			$("#mod_codigo").val(codigo_producto);
-			$("#mod_modelo").val(modelo_producto);
+			// $("#mod_modelo").val(modelo_producto);
 			$("#mod_nombre").val(nombre_producto);
 			$("select#mod_fabricante option")
 			.each(function() { this.selected = (this.text == fabricante); });

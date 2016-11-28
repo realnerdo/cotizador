@@ -7,7 +7,7 @@
 			<li class="<?php echo $active_productos;?>"><a href="productos.php"><i class='fa fa-barcode'></i> Productos</a></li>
 			<li class="<?php echo $active_fabricantes;?>"><a href="fabricantes.php"><i class='fa fa-tags'></i>  Fabricantes</a></li>
 			<li class="<?php echo $active_monedas;?>"><a href="monedas.php"><i class='fa fa-usd'></i>  Monedas</a></li>
-			<li class="<?php echo $active_reportes;?>"><a href="reportes.php"><i class='fa fa-bar-chart'></i> Reportes</a></li>
+			<!-- <li class="<?php echo $active_reportes;?>"><a href="reportes.php"><i class='fa fa-bar-chart'></i> Reportes</a></li> -->
 			<li class="<?php echo $active_usuarios;?>"><a href="usuarios.php"><i class='fa fa-user'></i> Usuarios</a></li>
 			<li class="<?php echo $active_empresa;?>"><a href="empresa.php"><i class='fa fa-cog'></i> Configuración</a></li>
 

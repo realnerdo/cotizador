@@ -14,7 +14,7 @@ if (isset($_POST['descuento'])){$descuento=$_POST['descuento'];}
 	/* Connect To Database*/
 	require_once ("../config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
 	require_once ("../config/conexion.php");//Contiene funcion que conecta a la base de datos
-$update_iva=false;	
+$update_iva=false;
 if (!empty($id) and !empty($cantidad) and !empty($precio_venta))
 {
 $insert_tmp=mysqli_query($con, "INSERT INTO detail_estimate (numero_cotizacion,id_producto, cantidad,descuento, precio_venta) VALUES ('$numero_cotizacion','$id','$cantidad','$descuento','$precio_venta')");
@@ -22,7 +22,7 @@ $update_iva=true;
 }
 if (isset($_GET['id']))//codigo elimina un elemento de la DB
 {
-$id_tmp=intval($_GET['id']);	
+$id_tmp=intval($_GET['id']);
 $delete=mysqli_query($con, "DELETE FROM detail_estimate WHERE id_detalle_cotizacion='".$id_tmp."'");
 $update_iva=true;
 }
@@ -56,7 +56,7 @@ if (isset($_GET['action'])){//Actualizacion de los datos
 		$sentencia_sql="";
 	}
 	$update=mysqli_query($con, "update estimates set $sentencia_sql where numero_cotizacion='$numero_cotizacion'");
-	
+
 	}
 
 if (isset($_POST['cantidad_item'])){
@@ -64,7 +64,7 @@ if (isset($_POST['cantidad_item'])){
 	$cantidad_item=intval($_POST['cantidad_item']);
 	$precio_item=floatval($_POST['precio_item']);
 	$descuento_item=intval($_POST['descuento_item']);
-	
+
 	$updates=mysqli_query($con,"update detail_estimate set cantidad='$cantidad_item', descuento='$descuento_item', precio_venta='$precio_item' where id_detalle_cotizacion='$id_detalle_cotizacion' ");
 	$update_iva=true;
 	}
@@ -87,6 +87,7 @@ if (isset($_POST['cantidad_item'])){
 <table class="table">
 <tr>
 	<th>CODIGO</th>
+	<th>FOTO</th>
 	<th class='text-center'>CANT.</th>
 	<th>DESCRIPCION</th>
 	<th class='text-right'>PRECIO UNIT.</th>
@@ -103,6 +104,7 @@ if (isset($_POST['cantidad_item'])){
 	{
 	$id_tmp=$row["id_detalle_cotizacion"];
 	$codigo_producto=$row['codigo_producto'];
+	$foto_producto=$row['foto_producto'];
 	$cantidad=$row['cantidad'];
 	$porcentaje=$row['descuento'] / 100;
 	$nombre_producto=$row['nombre_producto'];
@@ -117,40 +119,41 @@ if (isset($_POST['cantidad_item'])){
 	else {$marca_producto='';}
 	$precio_unitario=number_format($row['precio_venta'],$decimals,'.','');
 	$precio_total=$precio_unitario*$cantidad;
-	
+
 	$precio_total=number_format($precio_total,$decimals,'.','');
-	
+
 	$total_descuento=$precio_total*$porcentaje;//Total descuento
 	$total_descuento=number_format($total_descuento,$decimals,'.','');
 	$sumador_descuento+=$total_descuento;
 	$sumador_total+=$precio_total;//Sumador
-	
+
 	if (isset($id_detalle_cotizacion) and $id_detalle_cotizacion==$id_tmp)
 	{
 		$clase="info";
 	} else {
 		$clase="";
 	}
-	
+
 		?>
 		<tr class="<?php echo $clase;?>">
 			<td><?php echo $codigo_producto;?></td>
+			<td><img src="<?php echo $foto_producto;?>" width="100px" /></td>
 			<td><?php echo $cantidad;?></td>
 			<td><?php echo $nombre_producto.$marca_producto;?></td>
 			<td><span class="pull-right"><?php echo number_format($precio_unitario,$decimals, $dec_point, $thousands_sep);?></span></td>
 			<td><span class="pull-right"><?php echo number_format($total_descuento,$decimals, $dec_point, $thousands_sep);?></span></td>
 			<td><span class="pull-right"><?php echo number_format($precio_total,$decimals,$dec_point,$thousands_sep);?></span></td>
 			<td class='text-right'>
-				<a href="#editModalItem" data-toggle="modal" data-codigo="<?php echo $codigo_producto;?>" data-cantidad="<?php echo $cantidad;?>" data-descripcion="<?php echo strip_tags($nombre_producto);?>" data-descuento="<?php echo number_format($row['descuento'],2,'.',''); ?>" data-precio="<?php echo number_format($precio_unitario,2,'.','');?>" data-id="<?php echo $id_tmp?>"><i class="fa fa-edit"></i></a> 
+				<a href="#editModalItem" data-toggle="modal" data-codigo="<?php echo $codigo_producto;?>" data-cantidad="<?php echo $cantidad;?>" data-descripcion="<?php echo strip_tags($nombre_producto);?>" data-descuento="<?php echo number_format($row['descuento'],2,'.',''); ?>" data-precio="<?php echo number_format($precio_unitario,2,'.','');?>" data-id="<?php echo $id_tmp?>"><i class="fa fa-edit"></i></a>
 				<a href="#" onclick="eliminar('<?php echo $id_tmp ?>')"><i class="glyphicon glyphicon-trash"></i></a>
 			</td>
-		</tr>		
+		</tr>
 		<?php
 		$validez=$row['validez'];
 		$condiciones=$row['condiciones'];
 		$entrega=$row['entrega'];
 		$total_iva=$row['total_iva'];
-		
+
 	}
 	$total_parcial=number_format($sumador_total,$decimals,'.','');
 	$sumador_descuento=number_format($sumador_descuento,$decimals,'.','');
@@ -166,8 +169,8 @@ if (isset($_POST['cantidad_item'])){
 		$iva=ceil($iva);
 	}
 	$total_cotizacion=$total_neto+$total_iva;
-	
-	
+
+
 ?>
 <tr>
 	<td colspan=5><span class="pull-right">PARCIAL <?php echo $moneda;?></span></td>
