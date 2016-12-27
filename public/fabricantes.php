@@ -27,6 +27,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="";
+	$active_correos="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,7 +61,7 @@
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><i class='fa fa-tags'></i></a></li>
-				<li class="active">Fabricantes</li>
+				<li class="active">Marcas</li>
 			</ol>
 
 		</div><!--/.row-->
@@ -71,14 +72,14 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="btn-group pull-right">
-							<button type='button' class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" ></span> Nuevo Fabricante</button>
+							<button type='button' class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" ></span> Nueva Marca</button>
 						</div>
-						<h4><i class='glyphicon glyphicon-search'></i> Buscar Fabricantes</h4>
+						<h4><i class='glyphicon glyphicon-search'></i> Buscar Marcas</h4>
 					</div>
 					<div class="panel-body">
 						<form class="form-horizontal" role="form" id="datos_cotizacion">
 							<div class="form-group row">
-								<label for="q" class="col-md-3 control-label">Nombre del fabricante:</label>
+								<label for="q" class="col-md-3 control-label">Nombre de la marca:</label>
 								<div class="col-md-5">
 									<div class="input-group">
 										<input type="text" class="form-control" id="q" placeholder="" onkeyup='load(1);'>
@@ -147,8 +148,6 @@ $( "#editar_fabricante" ).submit(function( event ) {
 	function obtener_datos(id){
 			var fabricante = $("#fabricante"+id).val();
 			var estado = $("#estado"+id).val();
-
-
 
 			$("#mod_id").val(id);
 			$("#mod_nombre").val(fabricante);

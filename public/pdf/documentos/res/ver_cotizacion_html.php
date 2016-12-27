@@ -58,33 +58,33 @@ table.page_footer {width: 100%; border: none; background-color: white; padding: 
        <table style="width:100%">
       <tr style="vertical-align: top">
           <td style="width:100%; background: black; text-align: center; font-size: 40px; padding: 30px;">
-              <span style="color: white;">LOGO ARTÍFICE</span>
+              <img src="../../img/cotizaciones/logo_cotizacion.png" />
           </td>
       </tr>
     </table>
-    <!-- <p style="width:100%;text-align:right;margin-right:10mm;margin-top:10px;margin-bottom:5px"><strong>Fecha:</strong> <?php echo $fecha_cotizacion;?></p> -->
+    <table style="clear:both;width:100%">
+        <tr style="vertical-align: top">
+            <td style="width:50%;padding-top:10px;padding-bottom:10px;">
+                <strong>COTIZACIÓN PIEZAS EN EXISTENCIA</strong>
+            </td>
+            <td style="width:50%; text-align:right;padding-top:10px;padding-bottom:10px;">
+                <strong>Fecha:</strong> <?php echo date("d/m/Y");?>
+            </td>
+       </tr>
+    </table>
 
 
-	<table style="width:100%" class="table-bordered">
+	<table style="width:100%">
 		<tr style="vertical-align: top">
-            <td style="width:75%"><strong>Atención: </strong> <?php echo $nombre_contact; ?></td>
-			<td style="width:25%;">
-				<strong>Teléfono:</strong> <?php echo $telefono_contact; ?>
-
-			</td>
+            <td style="width:50%;padding: 5px 0;"><strong>Atención: </strong> <?php echo $empresa ?></td>
+			<td style="width:50%;text-align:right;padding: 5px 0;"><strong>Teléfono:</strong> <?php echo $tel2; ?></td>
 		</tr>
 		<tr style="vertical-align: top">
-            <td style="width:75%"><strong>Empresa: </strong> <?php echo $empresa ?></td>
-			<td style="width:25%;"><strong>Teléfono:</strong> <?php echo $tel2; ?></td>
+            <td style="width:50%;padding: 5px 0;"><strong>E-mail: </strong> <?php echo $email; ?></td>
+            <td style="width:50%;text-align:right;padding: 5px 0;"><strong>Vendedor: </strong> <?php echo $nombre_vendedor; ?></td>
 		</tr>
-		<tr style="vertical-align: top">
-            <td style="width:75%"><strong>E-mail: </strong> <?php echo $email ?></td>
-
-		</tr>
-
 
     </table>
-	<p style="margin:5px">A continuación Presentamos nuestra oferta que esperamos sea de su conformidad.</p>
 
     <table class="table-bordered" style="width:100%;" cellspacing=0>
         <tr>
@@ -98,25 +98,51 @@ table.page_footer {width: 100%; border: none; background-color: white; padding: 
 <?php
 $sumador_descuento=0;
 $sumador_total=0;
-$sql=mysqli_query($con, "select * from products, detail_estimate where products.id_producto=detail_estimate.id_producto and detail_estimate.numero_cotizacion='".$numero_cotizacion."'");
-while ($row=mysqli_fetch_array($sql))
+
+$sql='SELECT
+        e.`idEntrada` AS id_producto,
+        e.`titulo` AS titulo_producto,
+        e.`sku` AS sku_producto,
+        e.`precio` AS precio_producto,
+        c.`titulo` AS marca_producto,
+        i.`idImagen` AS id_foto,
+        i.`nomArchivo` AS nombre_foto,
+        d.`id_detalle_cotizacion`,
+        d.`numero_cotizacion`,
+        d.`cantidad`,
+        d.`descuento`,
+        d.`precio_venta`,
+        s.`validez`,
+        s.`condiciones`,
+        s.`entrega`,
+        s.`total_iva`
+        FROM `ctlg_entradas` e
+        INNER JOIN `ctlg_cats_entradas` p
+        ON e.`idEntrada`=p.`idEntrada`
+        INNER JOIN `ctlg_categorias` c
+        ON c.`idCat`=p.`idCat`
+        INNER JOIN `ctlg_imagenes` i
+        ON i.`idEntrada`=e.`idEntrada`
+        INNER JOIN `detail_estimate` d
+        ON e.`idEntrada`=d.`id_producto`
+        INNER JOIN `estimates` s
+        ON s.`numero_cotizacion`=d.`numero_cotizacion`
+        WHERE e.`tipo`="producto"
+        AND c.`tipo`="brand"
+        AND i.`tipo`="featurePage"
+        AND s.`id_cotizacion`="'.$_GET['id'].'"';
+
+$query=mysqli_query($con, $sql);
+while ($row=mysqli_fetch_array($query))
 	{
 
 	$id_producto=$row["id_producto"];
-	$foto_producto=$row["foto_producto"];
-	$codigo_producto=$row['codigo_producto'];
+	$foto_producto=$row["id_foto"]."_image_".$row['nombre_foto'];
+	$codigo_producto=$row['sku_producto'];
 	$cantidad=$row['cantidad'];
 	$porcentaje=$row['descuento'] / 100;
-	$nombre_producto=html_entity_decode($row['nombre_producto']);
-	$id_marca_producto=$row['id_marca_producto'];
-	if (!empty($id_marca_producto))
-	{
-	$sql_marca=mysqli_query($con,"select nombre_marca from manufacturers where id_marca='$id_marca_producto'");
-	$rw_marca=mysqli_fetch_array($sql_marca);
-	$nombre_marca=$rw_marca['nombre_marca'];
-	$marca_producto=" ".strtoupper($nombre_marca);
-	}
-	else {$marca_producto='';}
+	$nombre_producto=html_entity_decode($row['titulo_producto']);
+	$marca_producto=" ".$row['marca_producto'];
 	$precio_unitario=number_format($row['precio_venta'],$decimals,'.','');
 
 	$precio_total=$precio_unitario*$cantidad;
@@ -133,9 +159,9 @@ while ($row=mysqli_fetch_array($sql))
 	?>
 
         <tr>
-            <td class="" style="width: 10%; text-align: center; padding:5px;"><img src="../../<?php echo $foto_producto; ?>" style="width:80px;"></td>
+            <td class="" style="width: 10%; text-align: center; padding:5px;"><img src="http://artificestore.mx/archivos/imagenes/thumbs/<?php echo $foto_producto; ?>" style="width:80px;"></td>
             <td class="" style="width: 10%; text-align: center; padding:5px;"><?php echo $cantidad; ?></td>
-            <td class="left" style="width: 50%; text-align: left; padding:5px;"><?php echo $nombre_producto.$marca_producto;?></td>
+            <td class="left" style="width: 50%; text-align: left; padding:5px;"><?php echo $nombre_producto.$marca_producto;?><?php echo ($porcentaje*100 > 0) ? " - " . $porcentaje*100 . "% de descuento" : ""; ?></td>
             <td class="left" style="width: 14%; text-align: right; padding:5px;"><?php echo number_format($precio_unitario,$decimals, $dec_point, $thousands_sep);?></td>
             <td class="left" style="width: 14%; text-align: right; padding:5px;"><?php echo number_format($precio_total,$decimals, $dec_point, $thousands_sep);?></td>
 

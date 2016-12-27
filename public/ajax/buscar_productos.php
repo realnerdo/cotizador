@@ -18,7 +18,10 @@
 		$query=mysqli_query($con, "select * from detail_estimate where id_producto='".$id_producto."'");
 		$count=mysqli_num_rows($query);
 		if ($count==0){
-			if ($delete1=mysqli_query($con,"DELETE FROM products WHERE id_producto='".$id_producto."'")){
+			$delete1=mysqli_query($con,"DELETE FROM ctlg_cats_entradas WHERE idEntrada='".$id_producto."'");
+			$delete2=mysqli_query($con,"DELETE FROM ctlg_entradas WHERE idEntrada='".$id_producto."'");
+			$delete3=mysqli_query($con,"DELETE FROM ctlg_imagenes WHERE idEntrada='".$id_producto."'");
+			if ($delete3){
 			?>
 			<div class="alert alert-success alert-dismissible" role="alert">
 			  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -68,20 +71,44 @@
 	}
 	if($action == 'ajax'){
 		// escaping, additionally removing everything that could be (html/javascript-) code
-        $q = mysqli_real_escape_string($con,(strip_tags($_REQUEST['q'], ENT_QUOTES)));
-		$q2 = mysqli_real_escape_string($con,(strip_tags($_REQUEST['q2'], ENT_QUOTES)));
-		$q3 = intval($_REQUEST['q3']);
+        $q_sku = mysqli_real_escape_string($con,(strip_tags($_REQUEST['q'], ENT_QUOTES)));
+		$q_titulo = mysqli_real_escape_string($con,(strip_tags($_REQUEST['q2'], ENT_QUOTES)));
+		$q_marca = mysqli_real_escape_string($con,(strip_tags($_REQUEST['q3'], ENT_QUOTES)));
 
-		 $sTable = "products";
-		 $sWhere = " WHERE codigo_producto LIKE '%$q%'";
-		 $sWhere .= " AND nombre_producto LIKE '%$q2%'";
+		$sql = 'SELECT
+			e.`idEntrada` AS id_producto,
+			e.`titulo` AS titulo_producto,
+			e.`sku` AS sku_producto,
+			e.`precio` AS precio_producto,
+			c.`titulo` AS marca_producto,
+			k.`titulo` AS categoria_producto,
+			i.`idImagen` AS id_foto,
+			i.`nomArchivo` AS nombre_foto
+			FROM `ctlg_entradas` e
+			INNER JOIN `ctlg_cats_entradas` p
+			ON e.`idEntrada`=p.`idEntrada`
+			INNER JOIN `ctlg_categorias` c
+			ON c.`idCat`=p.`idCat`
+			INNER JOIN `ctlg_cats_entradas` v
+			ON e.`idEntrada`=v.`idEntrada`
+			INNER JOIN `ctlg_categorias` k
+			ON k.`idCat`=v.`idCat`
+			INNER JOIN `ctlg_imagenes` i
+			ON i.`idEntrada`=e.`idEntrada`
+			WHERE e.`tipo`="producto"
+			AND c.`tipo`="brand"
+			AND k.`tipo`="section-catalog"
+			AND i.`tipo`="featurePage"';
 
-		 if ($q3>0){
-			 $sWhere .= " AND id_marca_producto = '$q3'";
+		 $sql .= " AND e.`sku` LIKE '%$q_sku%'";
+		 $sql .= " AND e.`titulo` LIKE '%$q_titulo%'";
+
+		 if ($q_marca!=""){
+			 $sql .= " AND c.`titulo` = '$q_marca'";
 		 }
 
 
-		$sWhere.=" order by id_producto desc";
+		$sql.=" order by id_producto desc";
 		include 'pagination.php'; //include pagination file
 		//pagination variables
 		$page = (isset($_REQUEST['page']) && !empty($_REQUEST['page']))?$_REQUEST['page']:1;
@@ -89,81 +116,67 @@
 		$adjacents  = 4; //gap between pages after number of adjacents
 		$offset = ($page - 1) * $per_page;
 		//Count the total number of row in your table*/
-		$count_query   = mysqli_query($con, "SELECT count(*) AS numrows FROM $sTable  $sWhere");
+		$count_query  = mysqli_query($con, "SELECT count(*) AS numrows FROM ($sql) t");
 		$row= mysqli_fetch_array($count_query);
 		$numrows = $row['numrows'];
 		$total_pages = ceil($numrows/$per_page);
 		$reload = './productos.php';
 		//main query to fetch the data
-		$sql="SELECT * FROM  $sTable $sWhere LIMIT $offset,$per_page";
+		$sql.=" LIMIT $offset,$per_page";
 		$query = mysqli_query($con, $sql);
 		//loop through fetched data
 		if ($numrows>0){
 			/*Datos de la empresa*/
-				$sql_empresa=mysqli_query($con,"SELECT * FROM currencies, empresa where currencies.id=empresa.id_moneda");
-				$rw_empresa=mysqli_fetch_array($sql_empresa);
-				$iva=$rw_empresa["iva"];
-				$moneda=$rw_empresa["symbol"];
-				$decimals=$rw_empresa["decimals"];
-				$thousand_separator=$rw_empresa["thousand_separator"];
-				$decimal_separator=$rw_empresa["decimal_separator"];
+				// $sql_empresa=mysqli_query($con,"SELECT * FROM currencies, empresa where currencies.id=empresa.id_moneda");
+				// $rw_empresa=mysqli_fetch_array($sql_empresa);
+				// $iva=$rw_empresa["iva"];
+				// $moneda=$rw_empresa["symbol"];
+				// $decimals=$rw_empresa["decimals"];
+				// $thousand_separator=$rw_empresa["thousand_separator"];
+				// $decimal_separator=$rw_empresa["decimal_separator"];
 			/*Fin datos empresa*/
+
 			?>
 			<div class="table-responsive">
 			  <table class="table">
 				<tr  class="warning">
-					<th>ID</th>
 					<th>Foto</th>
-					<th>Código</th>
-					<th>Modelo</th>
+					<th>SKU</th>
 					<th>Producto</th>
-					<th>Fabricante</th>
-					<th>Estado</th>
-					<th>Agregado</th>
-					<th><span class='pull-right'>Precio</span></th>
+					<th>Marca</th>
+					<th>Categoría</th>
+					<th>Precio</th>
+					<!-- <th>Agregado</th> -->
+					<!-- <th><span class='pull-right'>Precio</span></th> -->
 					<th><span class="pull-right">Acciones</span></th>
 
 				</tr>
 				<?php
+				// while ($row=mysqli_fetch_array($query)){
 				while ($row=mysqli_fetch_array($query)){
+						$foto_producto=$row['id_foto'] . "_image_" . $row['nombre_foto'];
+						$sku_producto=$row['sku_producto'];
 						$id_producto=$row['id_producto'];
-						$foto_producto=$row['foto_producto'];
-						$codigo_producto=$row['codigo_producto'];
-						$modelo_producto=$row['modelo_producto'];
-						$nombre_producto=$row['nombre_producto'];
-						$id_marca_producto=$row['id_marca_producto'];
-						if (!empty($id_marca_producto)){
-							$sql_fab=mysqli_query($con,"select * from manufacturers where id_marca='".$id_marca_producto."'");
-							$rw_fab=mysqli_fetch_array($sql_fab);
-							$fabricante=$rw_fab['nombre_marca'];
-						}
-						else {
-							$fabricante="";
-						}
-						$status_producto=$row['status_producto'];
-						if ($status_producto==1){$estado="Activo";}
-						else {$estado="Inactivo";}
-						$date_added= date('d/m/Y', strtotime($row['date_added']));
+						$nombre_producto=$row['titulo_producto'];
+						$marca_producto=$row['marca_producto'];
+						$categoria_producto=$row['categoria_producto'];
 						$precio_producto=$row['precio_producto'];
 					?>
 
-					<input type="hidden" value="<?php echo $codigo_producto;?>" id="codigo_producto<?php echo $id_producto;?>">
-					<input type="hidden" value="<?php echo $modelo_producto;?>" id="modelo_producto<?php echo $id_producto;?>">
+					<input type="hidden" value="<?php echo $sku_producto;?>" id="codigo_producto<?php echo $id_producto;?>">
+					<input type="hidden" value="<?php echo $marca_producto;?>" id="marca_producto<?php echo $id_producto;?>">
+					<input type="hidden" value="<?php echo $categoria_producto;?>" id="categoria_producto<?php echo $id_producto;?>">
 					<input type="hidden" value="<?php echo htmlentities($nombre_producto);?>" id="nombre_producto<?php echo $id_producto;?>">
-					<input type="hidden" value="<?php echo $fabricante;?>" id="fabricante<?php echo $id_producto;?>">
-					<input type="hidden" value="<?php echo $estado;?>" id="estado<?php echo $id_producto;?>">
+					<input type="hidden" value="<?php echo $marca_producto;?>" id="marca<?php echo $id_producto;?>">
 					<input type="hidden" value="<?php echo number_format($precio_producto,2,'.','');?>" id="precio_producto<?php echo $id_producto;?>">
 					<span id="descripcion<?php echo $id_producto;?>" style="display:none"><?php echo $nombre_producto;?><span>
 					<tr>
-						<td><?php echo $id_producto; ?></td>
-						<td><img src="<?php echo $foto_producto; ?>" width="100px"></td>
-						<td><?php echo $codigo_producto; ?></td>
-						<td ><?php echo $modelo_producto; ?></td>
+						<td><img src="http://artificestore.mx/archivos/imagenes/thumbs/<?php echo $foto_producto; ?>" width="100px"></td>
+						<td><?php echo $sku_producto; ?></td>
 						<td ><?php echo $nombre_producto; ?></td>
-						<td><?php echo $fabricante;?></td>
-						<td><?php echo $estado;?></td>
-						<td><?php echo $date_added;?></td>
-						<td><?php echo $moneda;?><span class='pull-right'><?php echo number_format($precio_producto,$decimals,$decimal_separator,$thousand_separator);?></span></td>
+						<td ><?php echo $marca_producto; ?></td>
+						<td ><?php echo $categoria_producto; ?></td>
+						<td ><?php echo $precio_producto; ?></td>
 					<td ><span class="pull-right">
 					<button type="button" class='btn btn-success' title='Agregar a cotización' onclick="agregar_cotizacion('<?php echo $id_producto;?>');" ><i class="fa fa-shopping-cart"></i></button>
 					<a href="#" class='btn btn-info' title='Editar producto' onclick="obtener_datos('<?php echo $id_producto;?>');" data-toggle="modal" data-target="#editModalProduct"><i class="fa fa-edit"></i></a>

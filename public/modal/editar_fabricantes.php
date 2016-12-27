@@ -9,7 +9,7 @@
 		  <div class="modal-body">
 			<form class="form-horizontal" method="post" id="editar_fabricante" name="editar_fabricante">
 			<div id="resultados_ajax2"></div>
-			  
+
 			  <div class="form-group">
 				<label for="mod_nombre" class="col-sm-3 control-label">Nombre</label>
 				<div class="col-sm-8">
@@ -17,7 +17,7 @@
 					<input type="hidden" id="mod_id" name="mod_id">
 				</div>
 			  </div>
-			
+
 			  <div class="form-group">
 				<label for="mod_estado" class="col-sm-3 control-label">Estado</label>
 				<div class="col-sm-8">
@@ -28,10 +28,10 @@
 				  </select>
 				</div>
 			  </div>
-			 
-			 
-			 
-			
+
+
+
+
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

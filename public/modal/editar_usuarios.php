@@ -34,8 +34,16 @@
 				  <input type="email" class="form-control" id="user_email2" name="user_email2" placeholder="Correo electrónico" required>
 				</div>
 			  </div>
-						 	 
-			
+			  <?php if($_SESSION['user_name'] == 'admin'){ ?>
+			  <div class="form-group">
+				<label for="user_codigo2" class="col-sm-3 control-label">Código de descuentos</label>
+				<div class="col-sm-8">
+				  <input type="text" class="form-control" id="user_codigo2" name="user_codigo2" placeholder="Código de desbloqueo" required>
+				</div>
+			  </div>
+			  <?php } ?>
+
+
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

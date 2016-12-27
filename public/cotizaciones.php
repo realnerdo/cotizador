@@ -28,6 +28,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="";
+	$active_correos="";
 ?>
 <!DOCTYPE html>
 <html>

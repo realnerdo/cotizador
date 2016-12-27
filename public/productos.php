@@ -27,6 +27,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="";
+	$active_correos="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -100,12 +101,12 @@
 								<div class="col-md-4">
 									<div class="input-group">
 										<select class="form-control" id="q3" onchange="load(1);">
-											<option value="">Selecciona fabricante</option>
+											<option value="">Selecciona marca</option>
 											<?php
-												$query=mysqli_query($con,"select * from manufacturers order by nombre_marca");
+												$query=mysqli_query($con,"select * from artifice_web2.ctlg_categorias where tipo='brand' order by titulo");
 												while($rw=mysqli_fetch_array($query)){
 													?>
-													<option value="<?php echo $rw['id_marca'];?>"><?php echo $rw['nombre_marca'];?></option>
+													<option value="<?php echo $rw['titulo'];?>"><?php echo $rw['titulo'];?></option>
 													<?php
 												}
 											?>
@@ -214,7 +215,7 @@ editar_producto_form.submit(function( event ) {
 			var codigo_producto = $("#codigo_producto"+id).val();
 			// var modelo_producto = $("#modelo_producto"+id).val();
 			var nombre_producto = $("#nombre_producto"+id).val();
-			var fabricante = $("#fabricante"+id).val();
+			var marca = $("#marca"+id).val();
 			var estado = $("#estado"+id).val();
 			var precio_producto = $("#precio_producto"+id).val();
 			var descripcion = $("#descripcion"+id).html();
@@ -223,10 +224,8 @@ editar_producto_form.submit(function( event ) {
 			$("#mod_codigo").val(codigo_producto);
 			// $("#mod_modelo").val(modelo_producto);
 			$("#mod_nombre").val(nombre_producto);
-			$("select#mod_fabricante option")
-			.each(function() { this.selected = (this.text == fabricante); });
-			$("select#mod_estado option")
-			.each(function() { this.selected = (this.text == estado); });
+			$("select#mod_marca option")
+			.each(function() { this.selected = (this.text == marca); });
 			$("#mod_precio").val(precio_producto);
 
 			$('#mod_nombre').summernote({

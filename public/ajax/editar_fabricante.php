@@ -9,7 +9,7 @@
 		}  else if (
 			!empty($_POST['mod_nombre']) &&
 			$_POST['mod_estado']!=""
-			
+
 		){
 		/* Connect To Database*/
 		require_once ("../config/db.php");//Contiene las variables de configuracion para conectar a la base de datos
@@ -18,7 +18,7 @@
 		$nombre=mysqli_real_escape_string($con,(strip_tags($_POST["mod_nombre"],ENT_QUOTES)));
 		$estado=intval($_POST['mod_estado']);
 		$id_marca=$_POST['mod_id'];
-		$sql="UPDATE manufacturers SET  nombre_marca='".$nombre."', status_fabricante='".$estado."' WHERE id_marca='".$id_marca."'";
+		$sql="UPDATE ctlg_categorias SET titulo='".$nombre."', estatus='".$estado."' WHERE idCat='".$id_marca."'";
 		$query_update = mysqli_query($con,$sql);
 			if ($query_update){
 				$messages[] = "Fabricante ha sido actualizado satisfactoriamente.";
@@ -28,13 +28,13 @@
 		} else {
 			$errors []= "Error desconocido.";
 		}
-		
+
 		if (isset($errors)){
-			
+
 			?>
 			<div class="alert alert-danger" role="alert">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
-					<strong>Error!</strong> 
+					<strong>Error!</strong>
 					<?php
 						foreach ($errors as $error) {
 								echo $error;
@@ -44,7 +44,7 @@
 			<?php
 			}
 			if (isset($messages)){
-				
+
 				?>
 				<div class="alert alert-success" role="alert">
 						<button type="button" class="close" data-dismiss="alert">&times;</button>

@@ -11,7 +11,7 @@
 
 			<div class="row">
 				<div class="col-md-6">
-					<label for="codigo" class="control-label">Código</label>
+					<label for="codigo" class="control-label">SKU</label>
 					<input type="text" class="form-control" id="mod_codigo" name="mod_codigo" placeholder="Código del producto" required>
 					<input type="hidden" name="mod_id" id="mod_id">
 				</div>
@@ -28,29 +28,21 @@
 			</div>
 
 			<div class="row">
-				<div class="col-md-4">
-					<label for="mod_fabricante" class="control-label">Fabricante</label>
-					 <select class="form-control" id="mod_fabricante" name="mod_fabricante">
+				<div class="col-md-6">
+					<label for="mod_marca" class="control-label">Marca</label>
+					 <select class="form-control" id="mod_marca" name="mod_marca">
 					<option value="">-- Selecciona --</option>
 					<?php
-					$sql_fabricante=mysqli_query($con,"select * from manufacturers order by nombre_marca ");
+					$sql_fabricante=mysqli_query($con,"select * from ctlg_categorias where tipo='brand' order by titulo");
 					while ($rw_fab=mysqli_fetch_array($sql_fabricante)){
 						?>
-						<option value="<?php echo $rw_fab['id_marca'];?>"><?php echo $rw_fab['nombre_marca'];?></option>
+						<option value="<?php echo $rw_fab['idCat'];?>"><?php echo $rw_fab['titulo'];?></option>
 						<?php
 					}
 					?>
 				  </select>
 				</div>
-				<div class="col-md-4">
-					<label for="mod_estado" class="control-label">Estado</label>
-					<select class="form-control" id="mod_estado" name="mod_estado" required>
-						<option value="">-- Selecciona --</option>
-						<option value="1" selected>Activo</option>
-						<option value="0">Inactivo</option>
-					</select>
-				</div>
-				<div class="col-md-4">
+				<div class="col-md-6">
 					<label for="mod_precio" class="control-label">Precio</label>
 					<input type="text" class="form-control" id="mod_precio" name="mod_precio" placeholder="Precio de venta del producto" required pattern="^[0-9]{1,11}(\.[0-9]{0,2})?$" title="Ingresa sólo números con 0 ó 2 decimales" maxlength="13">
 				</div>

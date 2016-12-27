@@ -4,14 +4,11 @@
            $errors[] = "Código vacío";
         } else if (empty($_POST['nombre'])){
 			$errors[] = "Nombre del producto vacío";
-		} else if ($_POST['estado']==""){
-			$errors[] = "Selecciona el estado del producto";
 		} else if (empty($_POST['precio'])){
 			$errors[] = "Precio de venta vacío";
 		} else if (
 			!empty($_POST['codigo']) &&
 			!empty($_POST['nombre']) &&
-			$_POST['estado']!="" &&
 			!empty($_POST['precio'])
 		){
 		/* Connect To Database*/
@@ -21,26 +18,62 @@
 		$codigo=mysqli_real_escape_string($con,(strip_tags($_POST["codigo"],ENT_QUOTES)));
 		// $modelo=mysqli_real_escape_string($con,(strip_tags($_POST["modelo"],ENT_QUOTES)));
 		$nombre=mysqli_real_escape_string($con,($_POST["nombre"]));
-		$fabricante=intval($_POST['fabricante']);
-		$estado=intval($_POST['estado']);
+		$marca=intval($_POST['marca']);
 		$precio_venta=floatval($_POST['precio']);
 		$date_added=date("Y-m-d H:i:s");
 
-		// Foto de producto
-		$target_dir="../img/productos/";
-		$imageFileType = pathinfo($_FILES["foto_0"]["name"],PATHINFO_EXTENSION);
-		$target_file = $target_dir . time() . "." . $imageFileType ;
-		$imageFileZise=$_FILES["foto_0"]["size"];
+		function slugify($text)
+		{
+		  // replace non letter or digits by -
+		  $text = preg_replace('~[^\pL\d]+~u', '-', $text);
 
-		if ($imageFileZise>0){
-			move_uploaded_file($_FILES["foto_0"]["tmp_name"], $target_file);
-			$foto_insert=" ,foto_producto";
-			$target_file = str_replace('../', '', $target_file);
-			$foto_value=" , '$target_file'";
-		} else { $foto_insert=""; $foto_value=""; }
+		  // transliterate
+		  $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
 
-		$sql="INSERT INTO products (codigo_producto, nombre_producto, id_marca_producto, status_producto, date_added, precio_producto". $foto_insert .") VALUES ('$codigo','$nombre','$fabricante','$estado','$date_added','$precio_venta' ".$foto_value.")";
+		  // remove unwanted characters
+		  $text = preg_replace('~[^-\w]+~', '', $text);
+
+		  // trim
+		  $text = trim($text, '-');
+
+		  // remove duplicate -
+		  $text = preg_replace('~-+~', '-', $text);
+
+		  // lowercase
+		  $text = strtolower($text);
+
+		  if (empty($text)) {
+		    return 'n-a';
+		  }
+
+		  return $text;
+		}
+
+		$slug = slugify($nombre);
+
+		$sql="INSERT INTO ctlg_entradas (titulo, sku, precio, idUser, tipo, slug, opciones, fechaPublicacion, fechaModificacion, estatus) VALUES ('$nombre','$codigo','$precio_venta',3,'producto','$slug','N;', '$date_added', '$date_added', 1)";
 		$query_new_insert = mysqli_query($con,$sql);
+
+		$id_producto = mysqli_insert_id($con);
+
+		$sql_pivot = "INSERT INTO ctlg_cats_entradas (idCat, idEntrada) VALUES($marca, $id_producto)";
+		$query_pivot_insert = mysqli_query($con,$sql_pivot);
+
+		// Foto de producto
+		if(isset($_FILES['foto_0'])){
+			$target_dir="../img/productos/";
+			$imageFileType = pathinfo($_FILES["foto_0"]["name"],PATHINFO_EXTENSION);
+			$target_file = $target_dir . time() . "." . $imageFileType ;
+			$imageFileZise=$_FILES["foto_0"]["size"];
+
+			if ($imageFileZise>0){
+				move_uploaded_file($_FILES["foto_0"]["tmp_name"], $target_file);
+				$nombre_foto=$_FILES["foto_0"]["name"];
+				$sql_foto = "INSERT INTO ctlg_imagenes (nomArchivo, tipo, idEntrada, estatus, url, pie, opciones, contenido, orden, titulo) VALUES ('$nombre_foto', 'featurePage', $id_producto, 1, '', '', 'N;', '', 0, '')";
+				$query_foto = mysqli_query($con, $sql_foto);
+			}
+		}
+
 			if ($query_new_insert){
 				$messages[] = "Producto ha sido ingresado satisfactoriamente.";
 			} else{

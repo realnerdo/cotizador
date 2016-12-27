@@ -27,6 +27,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="";
+	$active_correos="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,6 +54,7 @@
 	include("modal/registro_contactos.php");
 	include("modal/editar_contactos.php");
 	include("modal/editar_clientes.php");
+	include("modal/importar_clientes.php");
 	?>
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
 		<div class="row">
@@ -67,7 +69,16 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="btn-group pull-right">
-							<button type='button' class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" ></span> Nuevo Cliente</button>
+
+						<div class="btn-group">
+							<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+							<i class="fa fa-file"></i> Importar datos <span class="caret"></span></button>
+							<ul class="dropdown-menu" role="menu">
+							  <li><a href="#importar_modal" data-toggle="modal"><i class="fa fa-file-excel-o "></i> Hoja de cálculo</a></li>
+							  <!-- <li><a href="dist/template/formato_importacion_productos.xlsx" ><i class="fa fa-download"></i> Descargar formato</a></li> -->
+							</ul>
+						  </div>
+						  <button type='button' class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" ></span> Nuevo Cliente</button>
 						</div>
 						<h4><i class='glyphicon glyphicon-search'></i> Buscar Clientes</h4>
 					</div>
@@ -125,6 +136,36 @@
 		  modal.find('.modal-body #editar_contacto #telefono_contact').val(telefono_contact)
 		  modal.find('.modal-body #editar_contacto #email_contact').val(email_contact)
 		})
+
+		$("#importar_datos" ).submit(function(event) {
+			 $.ajax({
+					type: "POST",
+					url: "ajax/importar_clientes.php",
+					data:  new FormData(this),
+					contentType: false,
+					cache: false,
+					processData:false,
+					 beforeSend: function(objeto){
+						$("#resultados").html("Enviando...");
+						$(".importar_datos").html("<i class='fa fa-spinner fa-spin'></i> Importando...");
+						$('.importar_datos').attr("disabled", true);
+					  },
+					success: function(datos){
+					$("#resultados").html(datos);
+
+					window.setTimeout(function() {
+					$(".alert").fadeTo(500, 0).slideUp(500, function(){
+					$(this).remove();});}, 5000);
+					$('#importar_modal').modal('hide');
+					$(".importar_datos").html("Importar datos");
+					$('.importar_datos').attr("disabled", false);
+					load(1);
+				  }
+			});
+				event.preventDefault();
+
+
+		});
 	</script>
 </body>
 </html>

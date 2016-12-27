@@ -6,15 +6,12 @@
            $errors[] = "Código vacío";
         } else if (empty($_POST['mod_nombre'])){
 			$errors[] = "Nombre del producto vacío";
-		} else if ($_POST['mod_estado']==""){
-			$errors[] = "Selecciona el estado del producto";
 		} else if (empty($_POST['mod_precio'])){
 			$errors[] = "Precio de venta vacío";
 		} else if (
 			!empty($_POST['mod_id']) &&
 			!empty($_POST['mod_codigo']) &&
 			!empty($_POST['mod_nombre']) &&
-			$_POST['mod_estado']!="" &&
 			!empty($_POST['mod_precio'])
 		){
 		/* Connect To Database*/
@@ -24,25 +21,37 @@
 		$codigo=mysqli_real_escape_string($con,(strip_tags($_POST["mod_codigo"],ENT_QUOTES)));
 		// $modelo=mysqli_real_escape_string($con,(strip_tags($_POST["mod_modelo"],ENT_QUOTES)));
 		$nombre=mysqli_real_escape_string($con,($_POST["mod_nombre"]));
-		$fabricante=intval($_POST['mod_fabricante']);
-		$estado=intval($_POST['mod_estado']);
+		$marca=intval($_POST["mod_marca"]);
 		$precio_venta=floatval($_POST['mod_precio']);
 		$id_producto=$_POST['mod_id'];
 
 		// Foto de producto
-		$target_dir="../img/productos/";
-		$imageFileType = pathinfo($_FILES["foto_0"]["name"],PATHINFO_EXTENSION);
-		$target_file = $target_dir . time() . "." . $imageFileType ;
-		$imageFileZise=$_FILES["foto_0"]["size"];
+		if(isset($_FILES['foto_0'])){
+			$target_dir="../img/productos/";
+			$imageFileType = pathinfo($_FILES["foto_0"]["name"],PATHINFO_EXTENSION);
+			$target_file = $target_dir . time() . "." . $imageFileType ;
+			$imageFileZise=$_FILES["foto_0"]["size"];
 
-		if ($imageFileZise>0){
-			move_uploaded_file($_FILES["foto_0"]["tmp_name"], $target_file);
-			$target_file = str_replace('../', '', $target_file);
-			$foto_update=", foto_producto='$target_file'";
-		} else { $foto_update=""; }
+			if ($imageFileZise>0){
+				move_uploaded_file($_FILES["foto_0"]["tmp_name"], $target_file);
+				$target_file = str_replace('../', '', $target_file);
+				$foto_update=", foto_producto='$target_file'";
+			} else { $foto_update=""; }
+		}
 
-		$sql="UPDATE products SET codigo_producto='".$codigo."', nombre_producto='".$nombre."', id_marca_producto='".$fabricante."', status_producto='".$estado."', precio_producto='".$precio_venta."'" . $foto_update . " WHERE id_producto='".$id_producto."'";
+		$sql="UPDATE ctlg_entradas SET sku='".$codigo."', titulo='".$nombre."', precio='".$precio_venta."' WHERE idEntrada='".$id_producto."'";
 		$query_update = mysqli_query($con,$sql);
+
+		$sql_brand = "SELECT idCat FROM ctlg_categorias WHERE tipo = 'brand'";
+		$query_brand = mysqli_query($con,$sql_brand);
+
+		while($row_brand=mysqli_fetch_array($query_brand)){
+			$idCat = $row_brand['idCat'];
+			$sql_pivot = "UPDATE ctlg_cats_entradas SET idCat = $marca WHERE idEntrada = $id_producto AND idCat = $idCat";
+			$query_update = mysqli_query($con, $sql_pivot);
+		}
+
+
 			if ($query_update){
 				$messages[] = "Producto ha sido actualizado satisfactoriamente.";
 			} else{

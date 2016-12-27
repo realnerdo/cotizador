@@ -27,6 +27,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="";
+	$active_correos="";
 
 	$sql_monedas=mysqli_query($con,"select id_moneda from empresa where id_empresa=1");
 	$rw=mysqli_fetch_array($sql_monedas);
@@ -87,14 +88,27 @@
 							 </div>
 
 
-							  <label for="atencion" class="col-md-1 control-label">Atención:</label>
+							  <label for="atencion" class="col-md-1 control-label">Vendedor:</label>
 								<div class="col-md-2">
-									<select class='form-control input-sm' id="atencion" name="atencion" >
+									<select class='form-control input-sm' id="vendedor" name="id_vendedor" >
 										<option value="">Selecciona</option>
+										<?php
+										$sql = "SELECT * FROM users";
+										$query = mysqli_query($con, $sql);
+										while ($row=mysqli_fetch_array($query)) {
+											$user_id = $row['user_id'];
+											$nombre_vendedor = $row['firstname'];
+											$nombre_usuario = $row['user_name'];
+											?>
+											<option value="<?php echo $user_id; ?>" <?php echo ($_SESSION['user_name'] == $nombre_usuario) ? "selected" : ""; ?> ><?php echo $nombre_vendedor; ?></option>
+											<?php
+										}
+										?>
+
 									</select>
 								</div>
 
-								<div class='row'>
+								<!-- <div class='row'>
 								<div class="col-md-2">
 									<input type="text" class="form-control input-sm" id="tel1" placeholder="" value="Teléfono" readonly>
 								 </div>
@@ -102,7 +116,7 @@
 									<input type="text" class="form-control input-sm" id="email_contact" placeholder="" value="Correo electrónico" readonly>
 								 </div>
 
-								</div>
+								</div> -->
 							</div>
 							<div class="form-group row">
 								<label for="empresa" class="col-md-2 control-label">Empresa:</label>
@@ -195,6 +209,25 @@
 	<script type="text/javascript" src="js/nueva_cotizacion.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+	<script type="text/javascript">
+		$('body').on('click', '#desbloquear_descuento', function(){
+			var codigo = $('#desbloquear_descuento_codigo').val();
+
+			var parametros = "codigo_desbloqueo="+codigo;
+
+			$.ajax({
+	   			type: "POST",
+	   			url: "ajax/desbloquear_descuento.php",
+	   			data: parametros,
+	   			success: function(datos){
+		   			$("#descuento").html(datos);
+		   		  }
+		   	});
+
+			return false;
+		});
+	</script>
 
 	</body>
 </html>

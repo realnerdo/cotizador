@@ -27,6 +27,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="active";
+	$active_correos="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,13 +61,55 @@
 		</div><!--/.row-->
 		<div class="row">
 			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4><i class='glyphicon glyphicon-user'></i> Reporte de cotizaciones por vendedor</h4>
+					</div>
 
+					<div class="panel-body">
+						<div id="resultados"></div><!-- Carga los datos ajax -->
+						<div class='outer_div_vendedores' ></div><!-- Carga los datos ajax -->
+					</div><!-- /.panel-body -->
+				</div><!-- /.panel -->
+			</div><!-- /.col-md-12 -->
+
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4><i class='glyphicon glyphicon-barcode'></i> Reporte de productos más cotizados</h4>
+					</div>
+
+					<div class="panel-body">
+						<div id="resultados"></div><!-- Carga los datos ajax -->
+						<div class='outer_div_productos' ></div><!-- Carga los datos ajax -->
+					</div><!-- /.panel-body -->
+				</div><!-- /.panel -->
+			</div><!-- /.col-md-12 -->
+
+		</div><!-- /.row -->
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4><i class='glyphicon glyphicon-barcode'></i> Reporte de categorías más cotizadas</h4>
+					</div>
+
+					<div class="panel-body">
+						<div id="resultados"></div><!-- Carga los datos ajax -->
+						<div class='outer_div_categorias' ></div><!-- Carga los datos ajax -->
+					</div><!-- /.panel-body -->
+				</div><!-- /.panel -->
 			</div><!-- /.col-md-12 -->
 
 		</div><!-- /.row -->
 	</div>	<!--/.main-->
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/VentanaCentrada.js"></script>
+	<script type="text/javascript" src="js/reportes.js"></script>
 	<script>
 
 	</script>

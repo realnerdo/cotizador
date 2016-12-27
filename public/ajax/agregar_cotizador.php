@@ -49,8 +49,8 @@ if (isset($_POST['cantidad_item'])){
 ?>
 <table class="table">
 <tr>
-	<th>CODIGO</th>
 	<th>FOTO</th>
+	<th>CODIGO</th>
 	<th class='text-center'>CANT.</th>
 	<th>DESCRIPCION</th>
 	<th class='text-right'>PRECIO UNIT.</th>
@@ -61,24 +61,44 @@ if (isset($_POST['cantidad_item'])){
 <?php
 	$sumador_total=0;
 	$sumador_descuento=0;
-	$sql=mysqli_query($con, "select * from products, tmp_estimate where products.id_producto=tmp_estimate.id_producto and tmp_estimate.session_id='".$session_id."'");
-	while ($row=mysqli_fetch_array($sql))
+
+	$sql = 'SELECT
+			e.`idEntrada` AS id_producto,
+			e.`titulo` AS titulo_producto,
+			e.`sku` AS sku_producto,
+			e.`precio` AS precio_producto,
+			c.`titulo` AS marca_producto,
+			i.`idImagen` AS id_foto,
+			i.`nomArchivo` AS nombre_foto,
+			t.`id_tmp` AS id_tmp,
+			t.`cantidad_tmp` AS cantidad_tmp,
+			t.`descuento_tmp` AS descuento_tmp,
+			t.`precio_tmp` AS precio_tmp,
+			t.`session_id` AS session_id
+			FROM `ctlg_entradas` e
+			INNER JOIN `ctlg_cats_entradas` p
+			ON e.`idEntrada`=p.`idEntrada`
+			INNER JOIN `ctlg_categorias` c
+			ON c.`idCat`=p.`idCat`
+			INNER JOIN `ctlg_imagenes` i
+			ON i.`idEntrada`=e.`idEntrada`
+			INNER JOIN `tmp_estimate` t
+			ON e.`idEntrada`=t.`id_producto`
+			WHERE e.`tipo`="producto"
+			AND c.`tipo`="brand"
+			AND i.`tipo`="featurePage"
+			AND t.`session_id`="'.$session_id.'"';
+
+	$query=mysqli_query($con, $sql);
+	while ($row=mysqli_fetch_array($query))
 	{
 	$id_tmp=$row["id_tmp"];
-	$codigo_producto=$row['codigo_producto'];
-	$foto_producto=$row['foto_producto'];
+	$codigo_producto=$row['sku_producto'];
+	$foto_producto=$row['id_foto']."_image_".$row['nombre_foto'];
 	$cantidad=$row['cantidad_tmp'];
 	$porcentaje=$row['descuento_tmp'] / 100;
-	$nombre_producto=$row['nombre_producto'];
-	$id_marca_producto=$row['id_marca_producto'];
-	if (!empty($id_marca_producto))
-	{
-	$sql_marca=mysqli_query($con, "select nombre_marca from manufacturers where id_marca='$id_marca_producto'");
-	$rw_marca=mysqli_fetch_array($sql_marca);
-	$nombre_marca=$rw_marca['nombre_marca'];
-	$marca_producto=" ".strtoupper($nombre_marca);
-	}
-	else {$marca_producto='';}
+	$nombre_producto=$row['titulo_producto'];
+	$marca_producto=" ".$row['marca_producto'];
 	$precio_venta=$row['precio_tmp'];
 	$precio_unitario=number_format($precio_venta,$decimals,'.','');
 	$precio_total=$precio_unitario*$cantidad;
@@ -96,8 +116,8 @@ if (isset($_POST['cantidad_item'])){
 	}
 		?>
 		<tr class="<?php echo $clase;?>">
+			<td><img src="http://artificestore.mx/archivos/imagenes/thumbs/<?php echo $foto_producto;?>" width="100px" /></td>
 			<td><?php echo $codigo_producto;?></td>
-			<td><img src="<?php echo $foto_producto;?>" width="100px" /></td>
 			<td class='text-center'><?php echo $cantidad;?></td>
 			<td><?php echo $nombre_producto.$marca_producto;?></td>
 			<td><span class="pull-right"><?php echo number_format($precio_unitario,$decimals,$dec_point,$thousands_sep);?></span></td>
@@ -119,27 +139,27 @@ if (isset($_POST['cantidad_item'])){
 	$total_cotizacion=$total_neto+$total_iva;
 ?>
 <tr>
-	<td colspan=5><span class="pull-right">PARCIAL <?php echo $moneda;?></span></td>
+	<td colspan=6><span class="pull-right">PARCIAL <?php echo $moneda;?></span></td>
 	<td><span class="pull-right"><?php echo number_format($total_parcial,$decimals,$dec_point,$thousands_sep);?></span></td>
 	<td></td>
 </tr>
 <tr>
-	<td colspan=5><span class="pull-right">DESCUENTO <?php echo $moneda;?></span></td>
+	<td colspan=6><span class="pull-right">DESCUENTO <?php echo $moneda;?></span></td>
 	<td><span class="pull-right"><?php echo number_format($sumador_descuento,$decimals,$dec_point,$thousands_sep);?></span></td>
 	<td></td>
 </tr>
 <tr>
-	<td colspan=5><span class="pull-right">NETO <?php echo $moneda;?></span></td>
+	<td colspan=6><span class="pull-right">NETO <?php echo $moneda;?></span></td>
 	<td><span class="pull-right"><?php echo number_format($total_neto,$decimals,$dec_point,$thousands_sep);?></span></td>
 	<td></td>
 </tr>
 <tr>
-	<td colspan=5><span class="pull-right">IVA <?php echo "$iva% $moneda";?></span></td>
+	<td colspan=6><span class="pull-right">IVA <?php echo "$iva% $moneda";?></span></td>
 	<td><span class="pull-right"><?php echo number_format($total_iva,$decimals,$dec_point,$thousands_sep);?></span></td>
 	<td></td>
 </tr>
 <tr>
-	<td colspan=5><span class="pull-right">TOTAL <?php echo $moneda;?></span></td>
+	<td colspan=6><span class="pull-right">TOTAL <?php echo $moneda;?></span></td>
 	<td><span class="pull-right"><?php echo number_format($total_cotizacion,$decimals,$dec_point,$thousands_sep);?></span></td>
 	<td></td>
 </tr>

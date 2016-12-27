@@ -27,6 +27,7 @@
 	$active_clientes="";
 	$active_contactos="";
 	$active_reportes="";
+	$active_correos="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -93,7 +94,7 @@
 							<i class='fa fa-line-chart fa-4x'></i>
 						</div>
 						<div class="col-sm-9 col-lg-7 widget-right">
-							<div class="large"><?php echo counter('products');?></div>
+							<div class="large"><?php echo counter('ctlg_entradas');?></div>
 							<div class="text-muted">Productos</div>
 						</div>
 					</div>
@@ -107,8 +108,8 @@
 
 						</div>
 						<div class="col-sm-9 col-lg-7 widget-right">
-							<div class="large"><?php echo counter('manufacturers');?></div>
-							<div class="text-muted">Fabricantes</div>
+							<div class="large"><?php echo counter('ctlg_categorias');?></div>
+							<div class="text-muted">Marcas</div>
 						</div>
 					</div>
 				</div>

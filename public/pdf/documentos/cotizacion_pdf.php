@@ -23,15 +23,16 @@
 	}
 	$user_id=$_SESSION['user_id'];
 	require_once(dirname(__FILE__).'/../html2pdf.class.php');
-		
+
 	//Variables por GET
 	$id_cliente=intval($_GET['id_cliente']);
+	$id_vendedor=intval($_GET['id_vendedor']);
 	$condiciones=mysqli_real_escape_string($con,(strip_tags($_GET["condiciones"],ENT_QUOTES)));
 	$validez=mysqli_real_escape_string($con,(strip_tags($_GET["validez"],ENT_QUOTES)));
 	$entrega=mysqli_real_escape_string($con,(strip_tags($_GET["entrega"],ENT_QUOTES)));
 	$notas=mysqli_real_escape_string($con,(strip_tags($_GET["notas"],ENT_QUOTES)));
 	$id_moneda=intval($_GET['moneda']);
-	$id_contact=intval($_GET['id_contacto']);
+	// $id_contact=intval($_GET['id_contacto']);
 	//Fin de variables por GET
 	/*Datos cliente*/
 	$sql_cliente=mysqli_query($con,"select * from clients where id='$id_cliente'");
@@ -43,12 +44,20 @@
 	$email=$rw_cliente['email'];
 	/* Fin Datos cliente*/
 	//SQL contacto
-	$sql_contacto=mysqli_query($con,"select * from contacts where id_contact='".$id_contact."'");
-	$rw_contacto=mysqli_fetch_array($sql_contacto);
-	$nombre_contact	= $rw_contacto['nombre_contact'];
-	$telefono_contact	= $rw_contacto['telefono_contact'];
-	$email_contact	= $rw_contacto['email_contact'];
+	// $sql_contacto=mysqli_query($con,"select * from contacts where id_contact='".$id_contact."'");
+	// $rw_contacto=mysqli_fetch_array($sql_contacto);
+	// $nombre_contact	= $rw_contacto['nombre_contact'];
+	// $telefono_contact	= $rw_contacto['telefono_contact'];
+	// $email_contact	= $rw_contacto['email_contact'];
 	//Fin SQL contacto
+
+	//SQL Vendedor
+	$sql_vendedor=mysqli_query($con,"select * from users where user_id='".$id_vendedor."'");
+	$rw_vendedor=mysqli_fetch_array($sql_vendedor);
+	$nombre_vendedor = $rw_vendedor['firstname'] . " " . $rw_vendedor['lastname'];
+	$email_vendedor	= $rw_vendedor['user_email'];
+
+
 	/*Datos usuario*/
 	$sql_user=mysqli_query($con,"select * from users where user_id='$user_id'");
 	$rw_user=mysqli_fetch_array($sql_user);
@@ -56,13 +65,13 @@
 	/* Fin Datos usurio*/
 	$sql_cotizacion=mysqli_query($con, "select LAST_INSERT_ID(numero_cotizacion) as last from estimates order by id_cotizacion desc limit 0,1 ");
 	$rwC=mysqli_fetch_array($sql_cotizacion);
-	$numero_cotizacion=$rwC['last']+1;	
+	$numero_cotizacion=$rwC['last']+1;
 	/*Datos de la empresa*/
 	$sql_empresa=mysqli_query($con,"SELECT * FROM empresa where id_empresa=1");
 	$rw_empresa=mysqli_fetch_array($sql_empresa);
 	$iva=$rw_empresa["iva"];
 	$impuesto=($iva/100) + 1;
-	
+
 	$nrc=$rw_empresa["nrc"];
 	$nombre_empresa=$rw_empresa["nombre"];
 	$propietario=$rw_empresa["propietario"];

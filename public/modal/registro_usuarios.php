@@ -45,12 +45,20 @@
 				  <input type="password" class="form-control" id="user_password_repeat" name="user_password_repeat" placeholder="" pattern=".{6,}" required>
 				</div>
 			  </div>
-			 
-			  
+			  <?php if($_SESSION['user_name'] == 'admin'){ ?>
+			  <div class="form-group">
+				<label for="user_codigo" class="col-sm-3 control-label">Código de descuentos</label>
+				<div class="col-sm-8">
+				  <input type="text" class="form-control" id="user_codigo" name="user_codigo" placeholder="" required>
+				</div>
+			  </div>
+			  <?php } ?>
 
-			 
-			 
-			
+
+
+
+
+
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

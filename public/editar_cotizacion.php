@@ -28,6 +28,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="";
+	$active_correos="";
 
 	$numero_cotizacion=intval($_GET['id']);
 	$_SESSION['numero_cotizacion']=$numero_cotizacion;
@@ -42,6 +43,7 @@
 	$fijo=$row['fijo'];
 	$email=$row['email'];
 	$id_cliente=$row['id_cliente'];
+	$id_vendedor=$row['id_vendedor'];
 	$id_cotizacion=$row['id_cotizacion'];
 	$validez=$row['validez'];
 	$condiciones=$row['condiciones'];
@@ -112,22 +114,26 @@
 								  <input type="text" class="form-control input-sm" id="nombre_cliente" placeholder="" required value="<?php echo $cliente;?>">
 								  <input id="id_cliente" type='hidden' value="<?php echo $id_cliente;?>">
 							 </div>
-							  <label for="atencion" class="col-md-1 control-label">Atención:</label>
+							  <label for="atencion" class="col-md-1 control-label">Vendedor:</label>
 								<div class="col-md-2">
-									<select class='form-control input-sm' id="atencion" name="atencion" onchange="update_cotizacion(8,this.value);">
+									<select class='form-control input-sm' id="vendedor" name="id_vendedor" onchange="update_cotizacion(8,this.value);">
 										<option value="">Selecciona</option>
 										<?php
-											$sql=mysqli_query($con,"select * from contacts where id_client='".$id_cliente."'");
-											while($row=mysqli_fetch_array($sql)){
-												?>
-												<option value="<?php echo $row['id_contact'];?>" data-telefono="<?php echo $row['telefono_contact'];?>" data-email="<?php echo $row['email_contact'];?>" <?php if ($row['id_contact']==$id_contact){echo "selected";$telefono_contact=$row['telefono_contact'];$email_contact=$row['email_contact'];} ?>><?php echo $row['nombre_contact'];?></option>
-												<?php
-											}
+										$sql = "SELECT * FROM users";
+										$query = mysqli_query($con, $sql);
+										while ($row=mysqli_fetch_array($query)) {
+											$user_id = $row['user_id'];
+											$nombre_vendedor = $row['firstname'];
+											$nombre_usuario = $row['user_name'];
+											?>
+											<option value="<?php echo $user_id; ?>" <?php echo ($id_vendedor == $user_id) ? "selected" : ""; ?> ><?php echo $nombre_vendedor; ?></option>
+											<?php
+										}
 										?>
 
 									</select>
 								</div>
-								<div class='row'>
+								<!-- <div class='row'>
 								<div class="col-xs-2">
 									<input type="text" class="form-control input-sm" id="tel1" placeholder="" value="<?php echo $telefono_contact;?>" readonly>
 								 </div>
@@ -135,7 +141,7 @@
 									<input type="text" class="form-control input-sm" id="email_contact" placeholder="" value="<?php echo $email_contact;?>" readonly>
 								 </div>
 
-								</div>
+								</div> -->
 							</div>
 							<div class="form-group row">
 								<label for="empresa" class="col-md-2 control-label">Empresa:</label>
@@ -237,6 +243,25 @@
 	<script>
 		$(document).ready(function(){
 			$("#resultados").load('./ajax/editar_cotizador.php');
+		});
+	</script>
+
+	<script type="text/javascript">
+		$('body').on('click', '#desbloquear_descuento', function(){
+			var codigo = $('#desbloquear_descuento_codigo').val();
+
+			var parametros = "codigo_desbloqueo="+codigo;
+
+			$.ajax({
+				type: "POST",
+				url: "ajax/desbloquear_descuento.php",
+				data: parametros,
+				success: function(datos){
+					$("#descuento").html(datos);
+				  }
+			});
+
+			return false;
 		});
 	</script>
 	</body>

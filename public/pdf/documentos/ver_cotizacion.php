@@ -15,13 +15,14 @@
 	$id_cotizacion= intval($_GET['id']);
 
 	require_once(dirname(__FILE__).'/../html2pdf.class.php');
-		
+
 
 	$sql_cotizacion=mysqli_query($con, "select * from estimates, clients, users where estimates.id_empleado=users.user_id and estimates.id_cliente=clients.id and id_cotizacion='".$id_cotizacion."' ");
 	$rwC=mysqli_fetch_array($sql_cotizacion);
-	$numero_cotizacion=$rwC['numero_cotizacion'];	
+	$numero_cotizacion=$rwC['numero_cotizacion'];
 	$fecha_cotizacion=date('d/m/Y', strtotime($rwC['fecha_cotizacion']));
 	$atencion=$rwC['contacto'];
+	$id_vendedor=$rwC['id_vendedor'];
 	$tel1=$rwC['movil'];
 	$empresa=$rwC['nombre_comercial'];
 	$tel2=$rwC['fijo'];
@@ -33,11 +34,18 @@
 	$total_iva=$rwC['total_iva'];
 	$id_contact=$rwC['id_contact'];
 	//SQL contacto
-	$sql_contacto=mysqli_query($con,"select * from contacts where id_contact='".$id_contact."'");
-	$rw_contacto=mysqli_fetch_array($sql_contacto);
-	$nombre_contact	= $rw_contacto['nombre_contact'];
-	$telefono_contact	= $rw_contacto['telefono_contact'];
-	$email_contact	= $rw_contacto['email_contact'];
+	// $sql_contacto=mysqli_query($con,"select * from contacts where id_contact='".$id_contact."'");
+	// $rw_contacto=mysqli_fetch_array($sql_contacto);
+	// $nombre_contact	= $rw_contacto['nombre_contact'];
+	// $telefono_contact	= $rw_contacto['telefono_contact'];
+	// $email_contact	= $rw_contacto['email_contact'];
+
+	//SQL Vendedor
+	$sql_vendedor=mysqli_query($con,"select * from users where user_id='".$id_vendedor."'");
+	$rw_vendedor=mysqli_fetch_array($sql_vendedor);
+	$nombre_vendedor = $rw_vendedor['firstname'] . " " . $rw_vendedor['lastname'];
+	$email_vendedor	= $rw_vendedor['user_email'];
+
 	//Fin SQL contacto
 	$notas=$rwC['notas'];
 	/*Datos de la empresa*/
@@ -45,7 +53,7 @@
 	$rw_empresa=mysqli_fetch_array($sql_empresa);
 	$iva=$rw_empresa["iva"];
 	$impuesto=($iva/100) + 1;
-	
+
 	$nrc=$rw_empresa["nrc"];
 	$nombre_empresa=$rw_empresa["nombre"];
 	$propietario=$rw_empresa["propietario"];
@@ -62,7 +70,7 @@
 	$dec_point=$rw_currency['decimal_separator'];
 	$thousands_sep=$rw_currency['thousand_separator'];
 	/*Fin datos moneda*/
-	
+
     // get the HTML
      ob_start();
      include(dirname('__FILE__').'/res/ver_cotizacion_html.php');

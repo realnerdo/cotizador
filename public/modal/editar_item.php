@@ -31,17 +31,18 @@
 					<div class="input-group">
 						<div class="input-group-addon"><i class="fa fa-usd"></i></div>
 						<input type="text" class="form-control" name="precio_item" id="precio_item" required>
-					</div>	
+					</div>
 				</div>
 				<div class="col-md-6">
 					<label for="descuento_item" class="control-label">Descuento</label>
-					<div class="input-group">
-						<div class="input-group-addon"><i class="fa fa-percent"></i></div>
-						<input type="text" class="form-control" name="descuento_item" id="descuento_item" >
-					</div>	
+					<br>
+					<div class="input-group" id="descuento">
+						<input type="text" name="desbloquear_descuento" class="form-control" placeholder="Código de aprobación" id="desbloquear_descuento_codigo">
+						<button type="button" class="btn btn-primary" id="desbloquear_descuento">Añadir descuento</button>
+					</div>
 				</div>
 
-			</div>			
+			</div>
 		</div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -50,4 +51,4 @@
 		</div>
 	  </div>
 	</div>
-</form>	
+</form>

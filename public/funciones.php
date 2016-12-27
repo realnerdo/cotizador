@@ -1,7 +1,35 @@
 <?php
 function counter($table){
 	global $con;
-	$sql="select count(*) as totales from $table";
+
+	if($table == 'ctlg_entradas'){
+		$join = 'SELECT
+			e.`idEntrada` AS id_producto,
+			e.`titulo` AS titulo_producto,
+			e.`sku` AS sku_producto,
+			e.`precio` AS precio_producto,
+			c.`titulo` AS marca_producto,
+			i.`idImagen` AS id_foto,
+			i.`nomArchivo` AS nombre_foto
+			FROM `ctlg_entradas` e
+			INNER JOIN `ctlg_cats_entradas` p
+			ON e.`idEntrada`=p.`idEntrada`
+			INNER JOIN `ctlg_categorias` c
+			ON c.`idCat`=p.`idCat`
+			INNER JOIN `ctlg_imagenes` i
+			ON i.`idEntrada`=e.`idEntrada`
+			WHERE e.`tipo`="producto"
+			AND c.`tipo`="brand"
+			AND i.`tipo`="featurePage"';
+		$sql="select count(*) as totales from ($join) t";
+	} else if($table == 'ctlg_categorias'){
+		$s= 'SELECT * FROM ctlg_categorias WHERE tipo="brand"';
+		$sql= "select count(*) as totales from ($s) t";
+	} else {
+		$sql="select count(*) as totales from $table";
+	}
+
+
 	$query=mysqli_query($con, $sql);
 	$row=mysqli_fetch_array($query);
 	return $totales=$row['totales'];
@@ -89,9 +117,9 @@ if($result['status'] != 200) {
 		}
 		function get_precio($id_producto){
 			global $con;
-			$query=mysqli_query($con,"select precio_producto from products where id_producto='$id_producto'");
+			$query=mysqli_query($con,"select precio from ctlg_entradas where idEntrada='$id_producto'");
 			$row=mysqli_fetch_array($query);
-			$precio=$row['precio_producto'];
+			$precio=$row['precio'];
 
 			return $precio;
 		}

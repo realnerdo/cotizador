@@ -27,6 +27,7 @@
 	$active_contactos="";
 	$active_monedas="";
 	$active_reportes="";
+	$active_correos="";
 ?>
 <!DOCTYPE html>
 <html>
@@ -173,12 +174,14 @@ $( "#editar_password" ).submit(function( event ) {
 			var apellidos = $("#apellidos"+id).val();
 			var usuario = $("#usuario"+id).val();
 			var email = $("#email"+id).val();
+			var codigo = $("#codigo"+id).val();
 
 			$("#mod_id").val(id);
 			$("#firstname2").val(nombres);
 			$("#lastname2").val(apellidos);
 			$("#user_name2").val(usuario);
 			$("#user_email2").val(email);
+			$("#user_codigo2").val(codigo);
 
 		}
 </script>

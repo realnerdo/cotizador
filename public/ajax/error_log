@@ -1,0 +1,2 @@
+[14-Dec-2016 16:23:03 America/Mexico_City] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/grupoend/public_html/clientes/artifice_cotizador/config/conexion.php on line 10
+[14-Dec-2016 16:23:06 America/Mexico_City] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/grupoend/public_html/clientes/artifice_cotizador/config/conexion.php on line 10

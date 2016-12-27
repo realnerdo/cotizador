@@ -4,12 +4,12 @@
 		<div class="modal-content">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="myModalLabel"><i class='glyphicon glyphicon-edit'></i> Agregar nuevo fabricante</h4>
+			<h4 class="modal-title" id="myModalLabel"><i class='glyphicon glyphicon-edit'></i> Agregar nueva marca</h4>
 		  </div>
 		  <div class="modal-body">
 			<form class="form-horizontal" method="post" id="guardar_fabricante" name="guardar_fabricante">
 			<div id="resultados_ajax"></div>
-			  
+
 			  <div class="form-group">
 				<label for="nombre" class="col-sm-3 control-label">Nombre</label>
 				<div class="col-sm-8">
